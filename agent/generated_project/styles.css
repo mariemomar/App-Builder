@@ -1,0 +1,341 @@
+/*
+  ColorfulTodo – Stylesheet
+  Implements theme variables, responsive layout, and UI component styling.
+*/
+
+/* --------------------------------------------------- */
+/*  Theme Custom Properties
+   Default (pastel) theme is applied via :root.
+   Additional themes are toggled by setting
+   data-theme="pastel|neon|dark" on the <html> element.
+*/
+:root {
+  /* Pastel theme (default) */
+  --bg-color: #fdf6e3;
+  --primary-color: #ffb3ba;   /* light pink */
+  --accent-color: #ffdfba;    /* light orange */
+  --text-color: #4a4a4a;
+  --border-color: #e0e0e0;
+  --button-bg: #ffb3ba;
+  --button-text: #4a4a4a;
+  --button-hover-bg: #ff9aa2;
+  --filter-active-bg: #ffdfba;
+  --filter-active-text: #4a4a4a;
+}
+
+html[data-theme="pastel"] {
+  /* Explicit pastel theme – mirrors :root */
+  --bg-color: #fdf6e3;
+  --primary-color: #ffb3ba;
+  --accent-color: #ffdfba;
+  --text-color: #4a4a4a;
+  --border-color: #e0e0e0;
+  --button-bg: #ffb3ba;
+  --button-text: #4a4a4a;
+  --button-hover-bg: #ff9aa2;
+  --filter-active-bg: #ffdfba;
+  --filter-active-text: #4a4a4a;
+}
+
+html[data-theme="neon"] {
+  --bg-color: #0d0d0d;
+  --primary-color: #1a1a1a;
+  --accent-color: #0ff0fc;   /* neon cyan */
+  --text-color: #e0e0e0;
+  --border-color: #333333;
+  --button-bg: #0ff0fc;
+  --button-text: #0d0d0d;
+  --button-hover-bg: #00e6e0;
+  --filter-active-bg: #00e6e0;
+  --filter-active-text: #0d0d0d;
+}
+
+html[data-theme="dark"] {
+  --bg-color: #1e1e1e;
+  --primary-color: #2c2c2c;
+  --accent-color: #ff6f61;   /* muted coral */
+  --text-color: #f5f5f5;
+  --border-color: #444444;
+  --button-bg: #ff6f61;
+  --button-text: #ffffff;
+  --button-hover-bg: #ff4c3b;
+  --filter-active-bg: #ff4c3b;
+  --filter-active-text: #ffffff;
+}
+
+/* --------------------------------------------------- */
+/*  Global resets & base typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: var(--accent-color);
+}
+
+/* Visually hidden class for accessibility */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------- */
+/*  Layout – .todo-app */
+.todo-app {
+  display: grid;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--primary-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile – single column (grid already stacks) */
+@media (max-width: 480px) {
+  .todo-app {
+    padding: 0.75rem;
+  }
+}
+
+/* --------------------------------------------------- */
+/*  Header */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+header select {
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+header select:focus,
+header select:hover {
+  background: var(--button-hover-bg);
+  outline: none;
+}
+
+/* --------------------------------------------------- */
+/*  New Todo Form */
+#new-todo-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#new-todo-input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  transition: border-color 0.2s ease;
+}
+
+#new-todo-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+#new-todo-form button {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s;
+}
+
+#new-todo-form button:hover {
+  background: var(--button-hover-bg);
+}
+
+#new-todo-form button:active {
+  transform: scale(0.97);
+}
+
+/* --------------------------------------------------- */
+/*  Todo List */
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  gap: 0.5rem;
+  animation: slideIn 0.3s ease forwards;
+}
+
+.todo-list li .item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.todo-list li input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.todo-list li .text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.todo-list li .edit-btn,
+.todo-list li .delete-btn,
+.todo-list li .drag-handle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  transition: color 0.2s ease;
+}
+
+.todo-list li .edit-btn:hover,
+.todo-list li .delete-btn:hover,
+.todo-list li .drag-handle:hover {
+  color: var(--accent-color);
+}
+
+/* Completed state */
+.todo-list li.completed .text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Drag‑and‑drop visual cues */
+.todo-list li.dragging {
+  opacity: 0.5;
+}
+
+.todo-list li.drag-over {
+  border: 2px dashed var(--accent-color);
+}
+
+/* --------------------------------------------------- */
+/*  Filter Buttons */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.4rem 0.8rem;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.2s ease;
+}
+
+.filter-btn[data-active="true"],
+.filter-btn[aria-pressed="true"] {
+  background: var(--filter-active-bg);
+  color: var(--filter-active-text);
+}
+
+.filter-btn:hover {
+  background: var(--button-hover-bg);
+}
+
+/* --------------------------------------------------- */
+/*  Footer */
+footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+/* --------------------------------------------------- */
+/*  Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------- */
+/*  Responsive typography & spacing */
+@media (min-width: 600px) {
+  #new-todo-input,
+  #new-todo-form button,
+  .filter-btn {
+    font-size: 1.1rem;
+  }
+
+  .todo-list li {
+    padding: 0.8rem 1rem;
+  }
+}
