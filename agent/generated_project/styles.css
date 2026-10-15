@@ -7,7 +7,7 @@
 /*  Theme Custom Properties
    Default (pastel) theme is applied via :root.
    Additional themes are toggled by setting
-   data-theme="pastel|neon|dark" on the <html> element.
+   data-them="pastel|neon|dark" on the <html> element.
 */
 :root {
   /* Pastel theme (default) */
@@ -76,10 +76,10 @@ html {
   background-color: var(--bg-color);
   color: var(--text-color);
   line-height: 1.5;
-  scroll-behavior: smooth;
+  scroll-behavior:smooth;
 }
 
-body {
+body{
   display: flex;
   flex-direction: column;
   min-height: 100vh;
