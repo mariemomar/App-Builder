@@ -1,341 +1,312 @@
 /*
-  ColorfulTodo – Stylesheet
-  Implements theme variables, responsive layout, and UI component styling.
+    VibrantTodo – Core stylesheet
+    -------------------------------------------------
+    This file defines a vibrant colour palette, a dark‑mode alternative, and a fully responsive layout.
+    All transitions are kept between 0.2s‑0.3s for a smooth UI experience.
 */
 
-/* --------------------------------------------------- */
-/*  Theme Custom Properties
-   Default (pastel) theme is applied via :root.
-   Additional themes are toggled by setting
-   data-them="pastel|neon|dark" on the <html> element.
-*/
+/* ---------------------------------------------------------------------
+   Colour palette – light theme (default)
+   --------------------------------------------------------------------- */
 :root {
-  /* Pastel theme (default) */
-  --bg-color: #fdf6e3;
-  --primary-color: #ffb3ba;   /* light pink */
-  --accent-color: #ffdfba;    /* light orange */
-  --text-color: #4a4a4a;
-  --border-color: #e0e0e0;
-  --button-bg: #ffb3ba;
-  --button-text: #4a4a4a;
-  --button-hover-bg: #ff9aa2;
-  --filter-active-bg: #ffdfba;
-  --filter-active-text: #4a4a4a;
+    /* Primary – used for interactive elements (buttons, links) */
+    --color-primary: #ff6b6b;   /* vivid coral */
+    /* Secondary – accents, hover states */
+    --color-secondary: #ffca3a; /* sunny amber */
+    /* Accent – highlights, focus outlines */
+    --color-accent: #8ac926;   /* fresh lime */
+    /* Background and text */
+    --color-bg: #fefefe;       /* near‑white */
+    --color-text: #212529;     /* dark gray */
+    /* Utility colours */
+    --color-muted: #adb5bd;    /* for completed todos */
 }
 
-html[data-theme="pastel"] {
-  /* Explicit pastel theme – mirrors :root */
-  --bg-color: #fdf6e3;
-  --primary-color: #ffb3ba;
-  --accent-color: #ffdfba;
-  --text-color: #4a4a4a;
-  --border-color: #e0e0e0;
-  --button-bg: #ffb3ba;
-  --button-text: #4a4a4a;
-  --button-hover-bg: #ff9aa2;
-  --filter-active-bg: #ffdfba;
-  --filter-active-text: #4a4a4a;
+/* ---------------------------------------------------------------------
+   Dark mode – toggled by adding .dark-mode to <body>
+   --------------------------------------------------------------------- */
+body.dark-mode {
+    --color-bg: #212529;       /* dark slate */
+    --color-text: #f8f9fa;     /* light gray */
+    --color-muted: #6c757d;   /* slightly brighter muted */
+    /* Keep primary/secondary/accent the same for brand consistency */
 }
 
-html[data-theme="neon"] {
-  --bg-color: #0d0d0d;
-  --primary-color: #1a1a1a;
-  --accent-color: #0ff0fc;   /* neon cyan */
-  --text-color: #e0e0e0;
-  --border-color: #333333;
-  --button-bg: #0ff0fc;
-  --button-text: #0d0d0d;
-  --button-hover-bg: #00e6e0;
-  --filter-active-bg: #00e6e0;
-  --filter-active-text: #0d0d0d;
+/* ---------------------------------------------------------------------
+   Global resets & base styles
+   --------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html[data-theme="dark"] {
-  --bg-color: #1e1e1e;
-  --primary-color: #2c2c2c;
-  --accent-color: #ff6f61;   /* muted coral */
-  --text-color: #f5f5f5;
-  --border-color: #444444;
-  --button-bg: #ff6f61;
-  --button-text: #ffffff;
-  --button-hover-bg: #ff4c3b;
-  --filter-active-bg: #ff4c3b;
-  --filter-active-text: #ffffff;
+html, body {
+    height: 100%;
 }
 
-/* --------------------------------------------------- */
-/*  Global resets & base typography */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.25s ease, color 0.25s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-html {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  line-height: 1.5;
-  scroll-behavior:smooth;
+#app {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
-body{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 1rem;
-}
-
-h1 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
-  margin-bottom: 0.5rem;
-  text-align: center;
-  color: var(--accent-color);
-}
-
-/* Visually hidden class for accessibility */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* --------------------------------------------------- */
-/*  Layout – .todo-app */
-.todo-app {
-  display: grid;
-  gap: 1rem;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem;
-  background: var(--primary-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Mobile – single column (grid already stacks) */
-@media (max-width: 480px) {
-  .todo-app {
-    padding: 0.75rem;
-  }
-}
-
-/* --------------------------------------------------- */
-/*  Header */
+/* ---------------------------------------------------------------------
+   Header & dark‑mode toggle button
+   --------------------------------------------------------------------- */
 header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
 }
 
-header select {
-  padding: 0.4rem 0.6rem;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: var(--button-bg);
-  color: var(--button-text);
-  cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+header h1 {
+    font-size: 1.8rem;
+    color: var(--color-primary);
 }
 
-header select:focus,
-header select:hover {
-  background: var(--button-hover-bg);
-  outline: none;
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-text);
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* --------------------------------------------------- */
-/*  New Todo Form */
-#new-todo-form {
-  display: flex;
-  gap: 0.5rem;
+#dark-mode-toggle:hover {
+    transform: rotate(20deg);
+    color: var(--color-accent);
 }
 
+/* ---------------------------------------------------------------------
+   New‑todo input
+   --------------------------------------------------------------------- */
 #new-todo-input {
-  flex: 1;
-  padding: 0.6rem 0.8rem;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  transition: border-color 0.2s ease;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 4px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #new-todo-input:focus {
-  outline: none;
-  border-color: var(--accent-color);
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(138, 201, 38, 0.3); /* accent with opacity */
 }
 
-#new-todo-form button {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s;
-}
-
-#new-todo-form button:hover {
-  background: var(--button-hover-bg);
-}
-
-#new-todo-form button:active {
-  transform: scale(0.97);
-}
-
-/* --------------------------------------------------- */
-/*  Todo List */
+/* ---------------------------------------------------------------------
+   Todo list items
+   --------------------------------------------------------------------- */
 .todo-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
 }
 
-.todo-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0.8rem;
-  background: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  gap: 0.5rem;
-  animation: slideIn 0.3s ease forwards;
+.todo-list > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--color-muted);
+    background: var(--color-bg);
+    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
-.todo-list li .item-left {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
+/* Enter/exit animations – to be used by JS (e.g., adding .enter / .exit) */
+.todo-list > li.enter {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: todoEnter 0.25s forwards;
 }
 
+.todo-list > li.exit {
+    opacity: 1;
+    transform: translateY(0);
+    animation: todoExit 0.25s forwards;
+}
+
+@keyframes todoEnter {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes todoExit {
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+/* Checkbox styling – hide native appearance and use a custom square */
 .todo-list li input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 3px;
+    margin-right: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.todo-list li .text {
-  flex: 1;
-  word-break: break-word;
+.todo-list li input[type="checkbox"]:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
 }
 
-.todo-list li .edit-btn,
-.todo-list li .delete-btn,
-.todo-list li .drag-handle {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.2rem;
-  font-size: 1rem;
-  color: var(--text-color);
-  transition: color 0.2s ease;
+.todo-list li input[type="checkbox"]:checked::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 0.9rem;
 }
 
-.todo-list li .edit-btn:hover,
-.todo-list li .delete-btn:hover,
-.todo-list li .drag-handle:hover {
-  color: var(--accent-color);
+/* Label (todo text) */
+.todo-list li label {
+    flex: 1;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    word-break: break-word;
 }
 
 /* Completed state */
-.todo-list li.completed .text {
-  text-decoration: line-through;
-  opacity: 0.6;
+.todo-list li input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: var(--color-muted);
 }
 
-/* Drag‑and‑drop visual cues */
-.todo-list li.dragging {
-  opacity: 0.5;
+/* Edit input – hidden by default, shown when .editing class is added */
+.todo-list li .edit-input {
+    flex: 1;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-secondary);
+    border-radius: 4px;
+    display: none;
+    margin-right: 0.5rem;
 }
 
-.todo-list li.drag-over {
-  border: 2px dashed var(--accent-color);
+.todo-list li.editing .edit-input {
+    display: block;
 }
 
-/* --------------------------------------------------- */
-/*  Filter Buttons */
+.todo-list li.editing label {
+    display: none;
+}
+
+/* Delete button */
+.todo-list li button.delete-btn {
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.todo-list li button.delete-btn:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+/* ---------------------------------------------------------------------
+   Filter buttons
+   --------------------------------------------------------------------- */
 .filters {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .filter-btn {
-  padding: 0.4rem 0.8rem;
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s ease, color 0.2s ease;
-}
-
-.filter-btn[data-active="true"],
-.filter-btn[aria-pressed="true"] {
-  background: var(--filter-active-bg);
-  color: var(--filter-active-text);
+    background: var(--color-bg);
+    border: 2px solid var(--color-primary);
+    color: var(--color-text);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .filter-btn:hover {
-  background: var(--button-hover-bg);
+    background: var(--color-primary);
+    color: #fff;
 }
 
-/* --------------------------------------------------- */
-/*  Footer */
+.filter-btn[aria-pressed="true"] {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+/* ---------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------- */
 footer {
-  margin-top: auto;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-color);
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-muted);
 }
 
-/* --------------------------------------------------- */
-/*  Animations */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-/* --------------------------------------------------- */
-/*  Responsive typography & spacing */
+/* ---------------------------------------------------------------------
+   Responsive layout – breakpoints
+   --------------------------------------------------------------------- */
 @media (min-width: 600px) {
-  #new-todo-input,
-  #new-todo-form button,
-  .filter-btn {
-    font-size: 1.1rem;
-  }
+    #app {
+        padding: 2rem;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
+    #new-todo-input {
+        font-size: 1.1rem;
+    }
+    .todo-list > li {
+        padding: 1rem 0.75rem;
+    }
+}
 
-  .todo-list li {
-    padding: 0.8rem 1rem;
-  }
+@media (min-width: 900px) {
+    /* Two‑column layout for the todo list and filters */
+    .main-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+    .todo-list {
+        margin-bottom: 0; /* when placed side‑by‑side */
+    }
+    .filters {
+        align-self: start;
+        justify-content: flex-start;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Utility classes (optional) – can be used by JS
+   --------------------------------------------------------------------- */
+.hidden {
+    display: none !important;
 }

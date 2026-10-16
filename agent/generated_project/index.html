@@ -3,34 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ColorfulTodo</title>
+    <title>VibrantTodo</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <header>
-        <h1>ColorfulTodo</h1>
-        <label for="theme-select" class="visually-hidden">Select Theme</label>
-        <select id="theme-select" aria-label="Theme selector">
-            <option value="pastel">Pastel</option>
-            <option value="neon">Neon</option>
-            <option value="dark">Dark</option>
-        </select>
-    </header>
-    <section class="todo-app">
-        <form id="new-todo-form" aria-label="Add new todo">
-            <input id="new-todo-input" type="text" placeholder="What needs to be done?!" autocomplete="off" required />
-            <button type="submit">Add</button>
-        </form>
-        <ul id="todo-list" class="todo-list" role="list" aria-live="polite"></ul>
-        <div class="filters" role="toolbar" aria-label="Todo filters">
+    <div id="app" role="main">
+        <header>
+            <h1>VibrantTodo</h1>
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+        </header>
+        <section aria-label="Add new todo">
+            <input id="new-todo-input" type="text" placeholder="What needs to be done?" autocomplete="off" aria-label="New todo" />
+            <!-- Hidden button for accessibility (triggered via keyboard shortcut) -->
+            <button id="add-todo-button" style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">Add Todo</button>
+        </section>
+        <ul id="todo-list" class="todo-list" aria-live="polite" aria-label="Todo list"></ul>
+        <div class="filters" role="group" aria-label="Todo filters">
             <button class="filter-btn" data-filter="all" aria-pressed="true">All</button>
             <button class="filter-btn" data-filter="active" aria-pressed="false">Active</button>
             <button class="filter-btn" data-filter="completed" aria-pressed="false">Completed</button>
         </div>
-    </section>
-    <footer>
-        <small>© 2024 ColorfulTodo. All rights reserved.</small>
-    </footer>
+        <footer>
+            <p>Made with ❤️ by VibrantTodo</p>
+        </footer>
+    </div>
 </body>
 </html>
